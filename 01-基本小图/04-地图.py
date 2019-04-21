@@ -1,4 +1,7 @@
+import re
+
 from pyecharts import Map, Geo
+
 '''
 要记得安装对应的地图拓展：
 $ pip install echarts-countries-pypkg
@@ -86,5 +89,41 @@ width=1200, height=600, background_color='#404a59')
 geo.add("空气质量评分", indexs, values, type="effectScatter", is_random=True, effect_scale=5, visual_range=[0, 5],visual_text_color="#fff", symbol_size=15, is_visualmap=True, is_roam=False)
 geo.show_config()
 geo.render(path="./data/04-05空气质量评分.html")
+
+# 在地图上直接显示出地区和对应数据  以中国地图为例
+'''
+"series": [
+        {
+            "type": "map",
+            "symbol": "circle",
+            "label": {
+                "normal": {
+                    "show": false,
+                    "position": "top",
+                    "formatter":"{b}\n{c}",
+                    "textStyle": {
+                        "fontSize": 12
+                    }
+将"show": false, 改为true   添加一个 "formatter":"{b}\n{c}",
+
+'''
+china_path="./data/04-01中国地图.html"
+china_new_path="./data/04-01中国地图_带信息.html"
+
+henan_map = "./data/04-02河南地图.html"
+
+
+def change_map(map_path, new_map_path):
+    # 在地图上直接显示出地区和对应数据
+    with open(map_path, "r", encoding="utf-8") as fb1:
+        with open(new_map_path, "w", encoding="utf-8") as fb2:
+            for i in fb1:
+                line_t = re.sub('"show": false', '"show": true', i)
+                line_t2 = re.sub('"position": "top",', r'''"position": "top","formatter":"{b}\\n{c}",''', line_t)
+                fb2.write(line_t2)
+
+
+change_map(henan_map, china_new_path)
+
 
 
